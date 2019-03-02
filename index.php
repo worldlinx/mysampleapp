@@ -12,7 +12,7 @@ $dbName = "C:\wamp64\www\AccessDB\Event1-Nov06-2018.accdb";
 if (!file_exists($dbName)) {
     die("Could not find database file.");
 }
-$db = new PDO("odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$dbName; Uid=; Pwd=;");
+$db = new PDO("odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$dbName; Uid=; Pwd=;");    
 
 /*
 $connStr = 

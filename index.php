@@ -1,64 +1,39 @@
+<!doctype html>
+<html>
+<head><link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-<?php
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
-ini_set('display_errors', true);
+</head>
+<body>
+<div ng-app="myApp" ng-controller="myCtrl"> 
+
+{{myWelcome}}
+<table class="table table-striped">
+  <tr ng-repeat="x in myWelcome">
+    <td ng-repeat="y in x">{{ y }}</td>
+    
+  </tr>
+</table>
+
+</div>
 
 
 
-//$dbName = $_SERVER["DOCUMENT_ROOT"] . "products\products.mdb";
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  $http({
+    method : "POST",
+    url : "bid_data.php",
+	params : { table: 2, round: 2, board: 3 }
+  }).then(function mySuccess(response) {
+      $scope.myWelcome = response.data;
+    }, function myError(response) {
+      $scope.myWelcome = response.statusText;
+  });
+});
+</script>
 
-$dbName = "C:\wamp64\www\AccessDB\Event1-Nov06-2018.accdb";
-
-if (!file_exists($dbName)) {
-    die("Could not find database file.");
-}
-$db = new PDO("odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$dbName; Uid=; Pwd=;");    
-
-/*
-$connStr = 
-        'odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};' .
-        'Dbq=C:\\Users\\ch.george\\Documents\\demo_db.accdb;';
-
-$dbh = new PDO($connStr);
-*/
-
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-$sql = 
-        "SELECT DISTINCT Board FROM BiddingData WHERE counter = ?";
-		
-		
-$sth = $db->prepare($sql);
-
-// query parameter value(s)
-$params = array(2);
-
-$sth->execute($params);
-
-echo '<select>';
-
-while($row = $sth->fetch()){
-	echo '<option value="'.$row['Board'].'">Board: '.$row['Board'].'</option>';
-}
-
-echo '</select>';
-
-$sql = 
-        "SELECT DISTINCT PairNS, PairEW  FROM ReceivedData";
-		
-		
-$sth = $db->prepare($sql);
-
-// query parameter value(s)
-$params = array(2);
-
-$sth->execute($params);
-echo '<select>';
-
-while($row = $sth->fetch()){
-	echo '<option>Pairs: '.$row['PairNS'].'-'.$row['PairEW'].'</option>';
-}
-
-echo '</select>';
-
-?>
+</body>
+</html>
